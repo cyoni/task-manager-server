@@ -1,0 +1,101 @@
+# .gitignore for a C# API Project
+
+# Build results
+[Dd]ebug/
+[Rr]elease/
+x64/
+x86/
+[Aa][Rr][Mm]/
+[Aa][Rr][Mm]64/
+bld/
+[Bb]in/
+[Oo]bj/
+
+# VS Code directories
+.vscode/
+.vscode-test/
+
+# User-specific files
+*.rsuser
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Mono auto generated files
+mono_crash.*
+
+# Windows image file caches
+Thumbs.db
+ehthumbs.db
+
+# Folder config file
+Desktop.ini
+
+# Recycle Bin used on file shares
+$RECYCLE.BIN/
+
+# VS Code extension specific
+.vscode/
+.vscode-test/
+
+# ASP.NET Scaffolding
+ScaffoldingReadMe.txt
+
+# Auto generated files
+Generated_Code/
+
+# ASP.NET, ASP.NET Core
+project.lock.json
+project.fragment.lock.json
+artifacts/
+
+# ASP.NET Core SignalR
+*.db
+
+# Microsoft Azure Web App publish settings
+# and Azure Application Insights settings
+PublishProfiles/
+
+# IIS
+*.vspscc
+*.vssscc
+.vs/
+.localhistory/
+
+# Windows specific
+[Dd]esktop.ini
+$RECYCLE.BIN/
+*.cab
+*.log
+*.pdb
+*.tmp
+*.svclog
+*.scc
+
+# Visual Studio 2019
+.vs2019/
+.vs2019_cdb/
+
+# Rider
+.idea/
+.idea_modules/
+.idea_modules.xml
+
+# Rider doesn't allow configuring output paths via GUI.
+# https://youtrack.jetbrains.com/issue/RIDER-41973
+*.dll
+*.exe
+*.obj
+*.pdb
+*.log
+*.user
+*.userosscache
+*.sln.docstates
+
+# DotNet Core
+project.lock.json
+project.fragment.lock.json
+artifacts/
+*.runtimeconfig.dev.json
+*.runtimeconfig.json
