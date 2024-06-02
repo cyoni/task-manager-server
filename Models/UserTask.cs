@@ -12,8 +12,7 @@ namespace Models.Data
     {
         [Key]
         public int Id { get; set; }
-        //[Required]
-        //public int UserId { get; set; }
+
         [Required]
         [MaxLength(100)]
         public string Title { get; set; } = string.Empty;
@@ -24,26 +23,16 @@ namespace Models.Data
         [Required]
         public short Status { get; set; }
         [Required]
-        public DateTime CreatedAt { get; set; }
+        public DateTime CreatedAt { get; set; } = DateTime.Now;
         [Required]
-        public DateTime UpdatedAt { get; set; }
+        public DateTime UpdatedAt { get; set; } = DateTime.Now;
         [Required]
         public DateTime PlannedStartDate { get; set; }
         [Required]
         public DateTime PlannedEndDate { get; set; }
-       
-        public ICollection<TaskTag> TaskTags { get; set; }
-        ///public ICollection<Tag> Tags { get; set; } = null!;
 
+        public ICollection<TaskTag> TaskTags { get; set; } = [];
 
-        //[ValidateNever]
-        //  public User User { get; set; }
-        public virtual ICollection<Comment> Comments { get; set; }
-        public UserTask()
-        {
-
-            UpdatedAt = DateTime.Now;
-        }
     }
 
 }

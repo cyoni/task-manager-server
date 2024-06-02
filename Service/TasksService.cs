@@ -1,14 +1,10 @@
 ﻿
 using AutoMapper;
 using Common;
-using Microsoft.EntityFrameworkCore.Infrastructure;
-using Model;
+using Common.Enums;
 using Models;
 using Models.Data;
 using Repository;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace Services
 {
@@ -43,7 +39,11 @@ namespace Services
         public async Task<TaskResponseDto?> GetTaskByIdAsync(int id)
         {
             var task = await _taskRepository.GetTaskByIdAsync(id);
-            List<TaskResponseDto> result = Utils.ConvertToResponse(new List<UserTask> { task });
+            if (task == null) 
+            { 
+                return null; 
+            }
+            var result = Utils.ConvertToResponse(new List<UserTask> { task });
             return result.FirstOrDefault();
         }
 

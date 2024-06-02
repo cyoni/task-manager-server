@@ -1,14 +1,10 @@
 ﻿
+using Common.Enums;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
-using Model;
-using Models;
 using Models.Data;
 using Repositories;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using Services;
 
 namespace Repository
 {
@@ -21,15 +17,10 @@ namespace Repository
         Task<bool> DeleteTaskAsync(int id);
 
     }
-    public class TasksRepository : ITaskRepository
+    public class TasksRepository(ILoggerService logger, TaskDbContext context) : ITaskRepository
     {
-        private readonly TaskDbContext _context;
-
-        public TasksRepository(TaskDbContext context)
-        {
-            _context = context;
-        }
-
+        private readonly ILoggerService _logger = logger;
+        private readonly TaskDbContext _context = context;
 
         public async Task<IEnumerable<UserTask>> GetTasksAsync(E_TaskType taskType)
         {
@@ -52,8 +43,8 @@ namespace Repository
             }
             catch (Exception ex)
             {
-
-                return null;
+                _logger.Log(E_LogLevel.High, "Exception in GetTasksAsync", ex);
+                throw;
             }
         }
 
@@ -66,8 +57,8 @@ namespace Repository
             }
             catch (Exception ex)
             {
-
-                return null;
+                _logger.Log(E_LogLevel.High, "Exception in GetTaskByIdAsync", ex);
+                throw;
             }
         }
 
@@ -96,12 +87,12 @@ namespace Repository
 
                 await _context.SaveChangesAsync();
 
-
                 return newTask.Entity;
             }
             catch (Exception ex)
             {
-                return null;
+                _logger.Log(E_LogLevel.High, "Exception in CreateTaskAsync", ex);
+                throw;
             }
         }
 
@@ -116,25 +107,31 @@ namespace Repository
             }
             catch (Exception ex)
             {
-
+                _logger.Log(E_LogLevel.High, "Exception in UpdateTaskAsync", ex);
+                throw;
             }
-            return false;
         }
 
         public async Task<bool> DeleteTaskAsync(int id)
         {
-            var task = await _context.Tasks.FindAsync(id);
-            if (task == null)
+            try
             {
-                return false;
+                var task = await _context.Tasks.FindAsync(id);
+                if (task == null)
+                {
+                    return false;
+                }
+
+                _context.Tasks.Remove(task);
+
+                await _context.SaveChangesAsync();
+                return true;
             }
-
-
-            _context.Tasks.Remove(task);
-            //_context.Comments.RemoveRange(task.Comments);
-
-            await _context.SaveChangesAsync();
-            return true;
+            catch (Exception ex)
+            {
+                _logger.Log(E_LogLevel.High, "Exception in DeleteTaskAsync", ex);
+                throw;
+            }
         }
 
     }

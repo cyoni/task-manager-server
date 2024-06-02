@@ -4,8 +4,18 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Models
+namespace Common.Enums
 {
+
+    public enum E_LogLevel
+    {
+        Warning = 0,
+        Low = 1,
+        Medium = 2, 
+        High = 3,
+        Critical = 4
+    }
+
     public enum E_TaskType
     {
         AllTasks = 0,

@@ -1,8 +1,5 @@
-using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
-using Model;
 using Models;
-using Models.Data;
 using Services;
 
 namespace home_assignment.Controllers
@@ -11,65 +8,87 @@ namespace home_assignment.Controllers
     [Route("[controller]")]
 
 
-    public class TagsController(IMapper mapper, ITagsService tagService) : ControllerBase
+    public class TagsController(ITagsService tagService) : ControllerBase
     {
         private readonly ITagsService _tagsService = tagService;
-        private readonly IMapper _mapper = mapper;
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Tag>>> Get()
+        public async Task<ActionResult<IEnumerable<TagResponse>>> Get()
         {
-            var tags = await _tagsService.GetTagsAsync();
-            return Ok(tags);
+            try
+            {
+                var tags = await _tagsService.GetTagsAsync();
+                return Ok(tags);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
         }
 
 
         [HttpPost]
-        public async Task<ActionResult<Tag>> Post(TagRequestDto tag)
+        public async Task<ActionResult<TagResponse>> Post(TagRequestDto tag)
         {
-            if (!ModelState.IsValid)
+            try
             {
-                return BadRequest();
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest();
+                }
+
+                var result = await _tagsService.CreateTagAsync(tag);
+                return StatusCode(201, result);
             }
-
-            var innerTagRequest = _mapper.Map<Tag>(tag);
-
-            var result = await _tagsService.CreateTagAsync(innerTagRequest);
-            return StatusCode(201, result);
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> Put(int id, TaskRequestDto tag)
+        public async Task<IActionResult> Put(int id, TagRequestDto tag)
         {
 
-
-            if (!ModelState.IsValid || id < 0)
+            try
             {
-                return BadRequest();
+                if (!ModelState.IsValid || id < 0)
+                {
+                    return BadRequest();
+                }
+
+                var result = await _tagsService.UpdateTagAsync(id, tag);
+                if (!result)
+                {
+                    return NotFound();
+                }
+
+                return NoContent();
             }
-            var innerTagRequest = _mapper.Map<Tag>(tag);
-
-            var result = await _tagsService.UpdateTagAsync(id, innerTagRequest);
-
-            if (!result)
+            catch (Exception ex)
             {
-                return NotFound();
+                return StatusCode(500, ex.Message);
             }
-
-            return NoContent();
         }
 
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
-            var result = await _tagsService.DeleteTagAsync(id);
-            if (!result)
+            try
             {
-                return NotFound();
-            }
+                var result = await _tagsService.DeleteTagAsync(id);
+                if (!result)
+                {
+                    return NotFound();
+                }
 
-            return NoContent();
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
         }
 
 

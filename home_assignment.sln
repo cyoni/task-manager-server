@@ -11,12 +11,17 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Services", "Service\Service
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Repositories", "Repository\Repositories.csproj", "{4FB18773-5DB1-47E7-9689-2530FA2C2DF1}"
+	ProjectSection(ProjectDependencies) = postProject
+		{DFFCDBCA-C785-4115-BADD-CEB98CE3607E} = {DFFCDBCA-C785-4115-BADD-CEB98CE3607E}
+	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Models", "Models\Models.csproj", "{569A768C-4DC0-49A6-9D56-27FC07D87E40}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Data", "Data\Data.csproj", "{F07D5233-0FE8-4BD9-9190-D41313293318}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common", "Common\Common.csproj", "{DFFCDBCA-C785-4115-BADD-CEB98CE3607E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Common", "Common\Common.csproj", "{DFFCDBCA-C785-4115-BADD-CEB98CE3607E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Logging", "Logging\Logging.csproj", "{F9BC5894-71CF-41B0-8F0B-D1F037AB584B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -48,6 +53,10 @@ Global
 		{DFFCDBCA-C785-4115-BADD-CEB98CE3607E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DFFCDBCA-C785-4115-BADD-CEB98CE3607E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DFFCDBCA-C785-4115-BADD-CEB98CE3607E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F9BC5894-71CF-41B0-8F0B-D1F037AB584B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F9BC5894-71CF-41B0-8F0B-D1F037AB584B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F9BC5894-71CF-41B0-8F0B-D1F037AB584B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F9BC5894-71CF-41B0-8F0B-D1F037AB584B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

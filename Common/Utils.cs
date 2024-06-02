@@ -29,7 +29,6 @@ namespace Common
 
         public static List<TaskResponseDto> ConvertToResponse(List<UserTask> tasks)
         {
-            if (tasks == null) return null;
             var result =  tasks.Select(t => new TaskResponseDto
                 {
                     Id = t.Id,

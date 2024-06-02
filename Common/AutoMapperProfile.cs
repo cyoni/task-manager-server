@@ -20,6 +20,8 @@ namespace Common
             // .ForPath(empmodel => empmodel.PlannedEndDate, empdto => empdto.MapFrom(x => x.Schedule.PlannedEndDate));
 
             CreateMap<TagRequestDto, Tag>();
+
+            CreateMap<Tag?, TagResponse>();
                 
 
 

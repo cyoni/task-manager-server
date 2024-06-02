@@ -1,9 +1,12 @@
 ﻿
 using AutoMapper;
+using Common.Enums;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
+using Microsoft.Extensions.Logging;
 using Models;
 using Repositories;
+using Services;
 
 
 namespace Repository
@@ -16,10 +19,10 @@ namespace Repository
         Task<bool> DeleteTagAsync(int id);
 
     }
-    public class TagRepository(IMapper mapper, TaskDbContext context) : ITagRepository
+    public class TagRepository(ILoggerService logger, TaskDbContext context) : ITagRepository
     {
         private readonly TaskDbContext _context = context;
-        private readonly IMapper _mapper = mapper;
+        private readonly ILoggerService _logger = logger;
 
         public async Task<IEnumerable<Tag>> GetTagsAsync()
         {
@@ -35,9 +38,10 @@ namespace Repository
                 await _context.SaveChangesAsync();
                 return newTag.Entity;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                return null;
+                _logger.Log(E_LogLevel.High, "Exception in CreateTagAsync", ex);
+                throw;
             }
         }
 
@@ -58,23 +62,31 @@ namespace Repository
             }
             catch (Exception ex)
             {
-
+                _logger.Log(E_LogLevel.High, "Exception in UpdateTagAsync", ex);
+                throw;
             }
-            return false;
         }
 
         public async Task<bool> DeleteTagAsync(int id)
         {
-            var tag = await _context.Tags.FindAsync(id);
-            if (tag == null)
+            try
             {
-                return false;
+                var tag = await _context.Tags.FindAsync(id);
+                if (tag == null)
+                {
+                    return false;
+                }
+
+                _context.Tags.Remove(tag);
+                await _context.SaveChangesAsync();
+
+                return true;
             }
-
-            _context.Tags.Remove(tag);
-            await _context.SaveChangesAsync();
-
-            return true;
+            catch (Exception ex)
+            {
+                _logger.Log(E_LogLevel.High, "Exception in DeleteTagAsync", ex);
+                throw;
+            }
         }
 
     }

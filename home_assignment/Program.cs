@@ -35,17 +35,22 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 
-
+// db context
 builder.Services.AddDbContext<TaskDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-builder.Services.AddScoped<ITaskRepository, TasksRepository>();
+// logging
+builder.Services.AddSingleton<ILoggerService, LoggerService>();
+
+
+// services
 builder.Services.AddScoped<ITasksService, TasksService>();
-
 builder.Services.AddScoped<ITagsService, TagsService>();
+
+// repositories
+
+builder.Services.AddScoped<ITaskRepository, TasksRepository>();
 builder.Services.AddScoped<ITagRepository, TagRepository>();
-
-
 
 
 var app = builder.Build();

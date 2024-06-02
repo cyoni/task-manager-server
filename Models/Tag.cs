@@ -12,13 +12,10 @@ namespace Models
     public class Tag
     {
         [Key]
-        //[DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
         public string Name { get; set; } = string.Empty;
         public string? Color { get; set; }
-        public ICollection<UserTask> Tasks { get; set; }
-        public ICollection<TaskTag> TaskTags { get; set; }
-
-
+        public ICollection<UserTask> Tasks { get; set; } = [];
+        public ICollection<TaskTag> TaskTags { get; set; } = [];
     }
 }

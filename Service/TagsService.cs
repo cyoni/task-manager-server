@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Azure;
 using Models;
 using Models.Data;
 using Repository;
@@ -12,9 +13,9 @@ namespace Services
 {
     public interface ITagsService
     {
-        Task<IEnumerable<Tag>> GetTagsAsync();
-        Task<Tag> CreateTagAsync(Tag tatagsk);
-        Task<bool> UpdateTagAsync(int id, Tag tag);
+        Task<IEnumerable<TagResponse>> GetTagsAsync();
+        Task<TagResponse> CreateTagAsync(TagRequestDto tatagsk);
+        Task<bool> UpdateTagAsync(int id, TagRequestDto tag);
         Task<bool> DeleteTagAsync(int id);
 
     }
@@ -29,22 +30,22 @@ namespace Services
             _mapper = mapper;
         }
 
-        public async Task<IEnumerable<Tag>> GetTagsAsync()
+        public async Task<IEnumerable<TagResponse>> GetTagsAsync()
         {
             var tags = await _tagRepository.GetTagsAsync();
-            return tags;
+            return _mapper.Map<IEnumerable<TagResponse>>(tags);
         }
 
-        public async Task<Tag> CreateTagAsync(Tag tag)
+        public async Task<TagResponse> CreateTagAsync(TagRequestDto tagDto)
         {
-
+            var tag = _mapper.Map<Tag>(tagDto);
             var createdTag = await _tagRepository.CreateTagAsync(tag);
-
-            return createdTag;
+            return _mapper.Map<TagResponse>(createdTag);
         }
 
-        public async Task<bool> UpdateTagAsync(int id, Tag tag)
+        public async Task<bool> UpdateTagAsync(int id, TagRequestDto tagDto)
         {
+            var tag = _mapper.Map<Tag>(tagDto);
             return await _tagRepository.UpdateTagAsync(tag);
         }
 

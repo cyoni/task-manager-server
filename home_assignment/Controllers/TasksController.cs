@@ -1,94 +1,110 @@
-using AutoMapper;
 using Common;
+using Common.Enums;
 using Microsoft.AspNetCore.Mvc;
-using Model;
 using Models;
-using Models.Data;
 using Services;
 
 namespace home_assignment.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class TasksController(IMapper mapper, ITasksService tasksService) : ControllerBase
+    public class TasksController(ITasksService tasksService) : ControllerBase
     {
-        private readonly IMapper _mapper = mapper;
         private readonly ITasksService _tasksService = tasksService;
 
         [HttpGet("")]
         public async Task<ActionResult<IEnumerable<TaskResponseDto>>> GetAllTasks([FromQuery] string type = "0")
         {
-
-            Enum.TryParse(type, out E_TaskType taskType);
-            
-            var tasks = await _tasksService.GetTasksAsync(taskType);
-
-            //_mapper.Map<IEnumerable<TaskResponseDto>>(tasks);
-            //var result = _mapper.Map<IEnumerable<TaskResponseDto>>(tasks);
-
-            return Ok(tasks);
+            try
+            {
+                Enum.TryParse(type, out E_TaskType taskType);
+                var tasks = await _tasksService.GetTasksAsync(taskType);
+                return Ok(tasks);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
         }
 
         [HttpGet("{id:int}")]
-        public async Task<ActionResult<TaskResponseDto>> GetTaskById([FromQuery] int id)
+        public async Task<ActionResult<TaskResponseDto>> GetTaskById(int id)
         {
-            var task = await _tasksService.GetTaskByIdAsync(id);
-            if (task == null)
+            try
             {
-                return NotFound();
+                var task = await _tasksService.GetTaskByIdAsync(id);
+                if (task == null)
+                {
+                    return BadRequest("Task with the requested id wasn't found");
+                }
+                return Ok(task);
             }
-            return Ok(task);
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message );
+            }
         }
 
         [HttpPost]
         public async Task<ActionResult<TaskResponseDto>> Post(TaskRequestDto task)
         {
-            if (!ModelState.IsValid)
+            try
             {
-                return BadRequest();
+                var userTask = Utils.ConvertToInnerRequest(task);
+                var createdTask = await _tasksService.CreateTaskAsync(userTask, task.Tags);
+                return StatusCode(201, createdTask);
             }
-
-
-            var userTask = Utils.ConvertToInnerRequest(task); // _mapper.Map<UserTask>(task);
-
-            var createdTask = await _tasksService.CreateTaskAsync(userTask, task.Tags);
-            return StatusCode(201, createdTask);
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
         }
-
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> Put(int id, TaskRequestDto task)
+        public async Task<IActionResult> Put(int id, TaskRequestDto taskDto)
         {
-
-
-            if (!ModelState.IsValid || id < 0)
+            try
             {
-                return BadRequest();
-            }
-            var userTask = _mapper.Map<UserTask>(task);
-            var result = await _tasksService.UpdateTaskAsync(userTask);
+                if (id < 0)
+                {
+                    return BadRequest();
+                }
 
-            if (!result)
+                taskDto.Id = id;
+
+                var task = Utils.ConvertToInnerRequest(taskDto);
+                var result = await _tasksService.UpdateTaskAsync(task);
+
+                if (!result)
+                {
+                    return NotFound();
+                }
+
+                return NoContent();
+            }
+            catch (Exception ex)
             {
-                return NotFound();
+                return StatusCode(500, ex.Message );
             }
-
-            return NoContent();
         }
-
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
-            var result = await _tasksService.DeleteTaskAsync(id);
-            if (!result)
+            try
             {
-                return NotFound();
+                var result = await _tasksService.DeleteTaskAsync(id);
+                if (!result)
+                {
+                    return NotFound();
+                }
+
+                return NoContent();
             }
-
-            return NoContent();
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message );
+            }
         }
-
-
     }
 }
